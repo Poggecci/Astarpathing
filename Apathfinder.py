@@ -20,6 +20,8 @@ green = (0, 255, 0)
 blue = (0, 0, 255)
 grey = (220, 220, 220)
 white = (255, 255, 255)
+turquoise = (0, 255, 255)
+purple = (255, 0, 255)
 # grid creation
 grid = [0 for a in range(columns)]
 for a in range(len(grid)):
@@ -85,8 +87,12 @@ def mouse_press():
 # uses distance as a heuristic to calculate the h cost
 def heuristic(current_node, end_node):
     distance = ((end_node.y - current_node.y) ** 2 + (end_node.x - current_node.x) ** 2) ** 0.5
-    #distance = abs(end_node.y - current_node.y) + abs(end_node.x - current_node.x)
+    # distance = abs(end_node.y - current_node.y) + abs(end_node.x - current_node.x)
     return distance
+
+
+def draw_path():
+    openSet[-1].path(color, 0)
 
 
 def main():
@@ -106,6 +112,7 @@ def main():
             break
         openSet.pop(lowest_index)
         closedSet.append(current)
+        current.path(red, 0)
         for a in range(len(current.neighbors)):
             neighbor = current.neighbors[a]
             temp_g_cost = current.g_cost + current.value
@@ -116,14 +123,15 @@ def main():
                 neighbor.f_cost = neighbor.g_cost + neighbor.h_cost
                 if neighbor not in openSet:
                     openSet.append(neighbor)
-        closedSet.append(current)
+                    neighbor.path(green, 0)
+
         if current == end:
             print('The final f cost was:' + str(current.f_cost))
             while current != start:
                 current.open = True
-                current.show(red, 0)
+                current.show(blue, 0)
                 current = current.parent
-            end.show(blue, 0)
+            end.show(purple, 0)
             return
 
 
@@ -154,8 +162,8 @@ running = True
 selecting = True
 pathing = True
 while running:
-    start.show(blue, 0)
-    end.show(blue, 0)
+    start.show(turquoise, 0)
+    end.show(purple, 0)
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_BACKSPACE:
@@ -169,4 +177,3 @@ while running:
     if pathing and not selecting:
         main()
         pathing = False
-    pygame.display.update()
